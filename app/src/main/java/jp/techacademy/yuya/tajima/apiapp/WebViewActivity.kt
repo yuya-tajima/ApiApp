@@ -29,13 +29,12 @@ class WebViewActivity: AppCompatActivity(), FavoriteOperations {
         recycler_favorite_layout.favoriteImageView.apply {
             setImageResource(if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)
             setOnClickListener {
-                if (isFavorite) {
+                isFavorite = if (isFavorite) {
                     onDeleteFavorite(favoriteInput.id)
-                    isFavorite = false
+                    false
                 } else {
                     onAddFavorite(favoriteInput)
-                    setImageResource(R.drawable.ic_star)
-                    isFavorite = true
+                    true
                 }
             }
         }
@@ -61,6 +60,7 @@ class WebViewActivity: AppCompatActivity(), FavoriteOperations {
             imageUrl = favoriteInput.imageUrl
             url = favoriteInput.url
         })
+        recycler_favorite_layout.favoriteImageView.setImageResource(R.drawable.ic_star)
     }
 
     override fun onDeleteFavorite(id: String) {
