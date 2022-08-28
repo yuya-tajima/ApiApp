@@ -20,7 +20,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
     var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
 
     // Itemを押したときのメソッド
-    var onClickItem: ((String) -> Unit)? = null
+    var onClickItem: ((String, FavoriteInput) -> Unit)? = null
 
     // お気に入り画面用のViewHolderオブジェクトの生成
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -61,11 +61,14 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
     // ViewHolder内のUI部品に値などをセット
     private fun updateFavoriteItemViewHolder(holder: FavoriteItemViewHolder, position: Int) {
         val data = items[position]
+
+        val favoriteInput = FavoriteInput( id = data.id, imageUrl = data.imageUrl, name = data.name, url = data.url )
+
         holder.apply {
             rootView.apply {
                 setBackgroundColor(ContextCompat.getColor(context, if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray)) // 偶数番目と機数番目で背景色を変更させる
                 setOnClickListener {
-                    onClickItem?.invoke(data.url)
+                    onClickItem?.invoke(data.url, favoriteInput)
                 }
             }
             nameTextView.text = data.name
@@ -94,5 +97,4 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         // Viewの種類を表現する定数、こちらはお気に入りが１件もないとき
         private const val VIEW_TYPE_EMPTY = 1
     }
-
 }

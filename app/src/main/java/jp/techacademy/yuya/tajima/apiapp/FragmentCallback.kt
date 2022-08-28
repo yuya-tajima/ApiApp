@@ -1,10 +1,6 @@
 package jp.techacademy.yuya.tajima.apiapp
 
-interface FragmentCallback {
+interface FragmentCallback: FavoriteOperations {
     // Itemを押したときの処理
-    fun onClickItem(url: String)
-    // お気に入り追加時の処理
-    fun onAddFavorite(shop: Shop)
-    // お気に入り削除時の処理
-    fun onDeleteFavorite(id: String)
+    fun onClickItem(url: String, favoriteInput: FavoriteInput)
 }

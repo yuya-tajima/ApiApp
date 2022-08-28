@@ -52,8 +52,8 @@ class ApiFragment: Fragment() {
                 fragmentCallback?.onDeleteFavorite(it.id)
             }
             // Itemをクリックしたとき
-            onClickItem = {
-                fragmentCallback?.onClickItem(it)
+            onClickItem = { url: String, favoriteInput: FavoriteInput ->
+                fragmentCallback?.onClickItem(url, favoriteInput)
             }
         }
         // RecyclerViewの初期化
@@ -85,6 +85,11 @@ class ApiFragment: Fragment() {
             updateData()
         }
         updateData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateView()
     }
 
     fun updateView() { // お気に入りが削除されたときの処理（Activityからコールされる）

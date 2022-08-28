@@ -2,7 +2,6 @@ package jp.techacademy.yuya.tajima.apiapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
@@ -30,34 +29,24 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         }.attach()
     }
 
-    override fun onClickItem(url: String) {
-        WebViewActivity.start(this, url)
+    override fun onClickItem(url: String, favoriteInput: FavoriteInput) {
+        WebViewActivity.start(this, url, favoriteInput)
     }
 
-    override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
+    override fun onAddFavorite(favoriteInput: FavoriteInput) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
         FavoriteShop.insert(FavoriteShop().apply {
-            id = shop.id
-            name = shop.name
-            imageUrl = shop.logoImage
-            url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
+            id = favoriteInput.id
+            name = favoriteInput.name
+            imageUrl = favoriteInput.imageUrl
+            url = favoriteInput.url
         })
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
     override fun onDeleteFavorite(id: String) { // Favoriteから削除するときのメソッド(Fragment -> Activity へ通知する)
-        showConfirmDeleteFavoriteDialog(id)
-    }
-
-    private fun showConfirmDeleteFavoriteDialog(id: String) {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.delete_favorite_dialog_title)
-            .setMessage(R.string.delete_favorite_dialog_message)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                deleteFavorite(id)
-            }
-            .setNegativeButton(android.R.string.cancel) { _, _ ->}
-            .create()
-            .show()
+        showConfirmDeleteFavoriteDialog(this, id ) {
+            deleteFavorite(it)
+        }
     }
 
     private fun deleteFavorite(id: String) {

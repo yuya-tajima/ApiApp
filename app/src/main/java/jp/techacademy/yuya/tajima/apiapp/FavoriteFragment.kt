@@ -38,8 +38,8 @@ class FavoriteFragment: Fragment() {
                 fragmentCallback?.onDeleteFavorite(it.id)
             }
             // Itemをクリックしたとき
-            onClickItem = {
-                fragmentCallback?.onClickItem(it)
+            onClickItem = { url: String, favoriteInput: FavoriteInput ->
+                fragmentCallback?.onClickItem(url, favoriteInput)
             }
         }
         // RecyclerViewの初期化
@@ -50,6 +50,11 @@ class FavoriteFragment: Fragment() {
         swipeRefreshLayout.setOnRefreshListener {
             updateData()
         }
+        updateData()
+    }
+
+    override fun onResume() {
+        super.onResume()
         updateData()
     }
 
